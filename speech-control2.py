@@ -90,7 +90,7 @@ try:
                             subprocess.Popen(["/usr/bin/firefox", "startpage.com"])
                             last_command = word
                         if word == "schach" and last_command!= word:
-                            subprocess.Popen(["/usr/bin/firefox", "lichess.org"])
+                            subprocess.Popen(["/usr/bin/chromium", "lichess.org"])
                             last_command = word
                         if word == "youtube" and last_command!= word:
                             subprocess.Popen(["/usr/bin/firefox", "youtube.com"])
@@ -100,6 +100,18 @@ try:
                             last_command = word
                         if word == "discord" and last_command!= word:
                             subprocess.Popen(["/usr/bin/discord"])
+                            last_command = word
+                        if word == "code" and last_command!= word:
+                            subprocess.run(["flatpak", "run", "com.vscodium.codium"])
+                            last_command = word
+                        if word == "geogebra" and last_command!= word:
+                            subprocess.run(["flatpak", "run", "org.geogebra.GeoGebra"])
+                            last_command = word
+                        if word == "anki" and last_command!= word:
+                            subprocess.run(["flatpak", "run", "net.ankiweb.Anki"])
+                            last_command = word
+                        if word == "whatsapp" or word == "whats-app" and last_command!= word:
+                            subprocess.run(["flatpak", "run", "io.github.mimbrero.WhatsAppDesktop"])
                             last_command = word
                     öffnen = False
                 
