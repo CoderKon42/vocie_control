@@ -105,13 +105,13 @@ try:
                             subprocess.run(["flatpak", "run", "com.vscodium.codium"])
                             last_command = word
                         if word == "geogebra" and last_command!= word:
-                            subprocess.run(["flatpak", "run", "org.geogebra.GeoGebra"])
+                            subprocess.Popen(["/usr/bin/geogebra"])
                             last_command = word
                         if word == "anki" and last_command!= word:
                             subprocess.run(["flatpak", "run", "net.ankiweb.Anki"])
                             last_command = word
                         if word == "github" and last_command!= word:
-                            subprocess.run(["flatpak", "run", "io.github.shiftey.Desktop"])
+                            subprocess.Popen(["flatpak", "run", "io.github.shiftey.Desktop"])
                             last_command = word
                         if word == "whatsapp" or word == "whats-app" and last_command!= word:
                             subprocess.run(["flatpak", "run", "io.github.mimbrero.WhatsAppDesktop"])
