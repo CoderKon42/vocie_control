@@ -81,7 +81,7 @@ try:
                 words = vc['partial'].split()
 
                 for word in words:
-                    if word == "öffne":
+                    if word == "öffne" or word == "öffner": #frequently mistake (öffner)
                         öffnen = True
 
                 if öffnen:
@@ -109,6 +109,9 @@ try:
                             last_command = word
                         if word == "anki" and last_command!= word:
                             subprocess.run(["flatpak", "run", "net.ankiweb.Anki"])
+                            last_command = word
+                        if word == "github" and last_command!= word:
+                            subprocess.run(["flatpak", "run", "io.github.shiftey.Desktop"])
                             last_command = word
                         if word == "whatsapp" or word == "whats-app" and last_command!= word:
                             subprocess.run(["flatpak", "run", "io.github.mimbrero.WhatsAppDesktop"])
