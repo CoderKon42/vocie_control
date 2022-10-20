@@ -14,7 +14,6 @@ words = []
 öffnen = False
 last_command = ""
 
-
 def int_or_str(text):
     """Helper function for argument parsing."""
     try:
