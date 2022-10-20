@@ -80,8 +80,8 @@ try:
                 last_command = ""
             else:
                 vc = json.loads(rec.PartialResult())
-                print(vc)
                 words = vc['partial'].split()
+                print(words)
 
                 for word in words:
                     if word == "öffne" or word == "öffner": #frequently mistake (öffner)
@@ -93,7 +93,7 @@ try:
                             subprocess.Popen(["/usr/bin/firefox", "startpage.com"])
                             last_command = word
                         if word == "schach" and last_command!= word:
-                            subprocess.Popen(["/usr/bin/chromium", "lichess.org"])
+                            subprocess.Popen(["/usr/bin/firefox", "lichess.org"])
                             last_command = word
                         if word == "youtube" and last_command!= word:
                             subprocess.Popen(["/usr/bin/firefox", "youtube.com"])
