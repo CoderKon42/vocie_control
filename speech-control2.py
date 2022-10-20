@@ -74,6 +74,9 @@ try:
             data = q.get()
             if rec.AcceptWaveform(data):
                 print(rec.Result())
+                for word in words:
+                    if word == "öffne" or word == "öffner": #frequently mistake (öffner)
+                        öffnen = True
                 last_command = ""
             else:
                 vc = json.loads(rec.PartialResult())
@@ -106,6 +109,9 @@ try:
                             last_command = word
                         if word == "geogebra" and last_command!= word:
                             subprocess.Popen(["/usr/bin/geogebra"])
+                            last_command = word
+                        if word == "gimp" and last_command!= word:
+                            subprocess.Popen(["/usr/bin/gimp"])
                             last_command = word
                         if word == "anki" and last_command!= word:
                             subprocess.run(["flatpak", "run", "net.ankiweb.Anki"])
