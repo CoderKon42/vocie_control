@@ -10,11 +10,10 @@ import subprocess
 from vosk import Model, KaldiRecognizer
 
 q = queue.Queue()
-last_command = ""
-penultimate_command = ""
-word_used = False
-in_use = True
 words = []
+öffnen = False
+last_command = ""
+
 
 def int_or_str(text):
     """Helper function for argument parsing."""
@@ -75,37 +74,57 @@ try:
             data = q.get()
             if rec.AcceptWaveform(data):
                 print(rec.Result())
+                for word in words:
+                    if word == "öffne" or word == "öffner": #frequently mistake (öffner)
+                        öffnen = True
                 last_command = ""
-                penultimate_command = ""
             else:
                 vc = json.loads(rec.PartialResult())
-                print(vc)
                 words = vc['partial'].split()
-                for word in words:
-                    if word == "firefox" and word != last_command and word != penultimate_command and in_use:
-                        subprocess.Popen(["/usr/bin/firefox", "startpage.com"])
-                        word_used = True
-                    if word == "schach" and word != last_command and word != penultimate_command and in_use:
-                        subprocess.Popen(["/usr/bin/firefox", "lichess.org"])
-                        word_used = True
-                    if word == "youtube" and word != last_command and word != penultimate_command and in_use:
-                        subprocess.Popen(["/usr/bin/firefox", "youtube.com"])
-                        word_used = True
-                    if word == "signal" and word != last_command and word != penultimate_command and in_use:
-                        subprocess.Popen(["/usr/bin/signal-desktop"])
-                        word_used = True
-                    if word == "discord" and word != last_command and word != penultimate_command and in_use:
-                        subprocess.Popen(["/usr/bin/discord"])
-                        word_used = True
-                    if word == "stopp":
-                        in_use = False
-                    if word == "weiter":
-                        in_use = True
+                print(words)
 
-                    if word_used:
-                        penultimate_command = last_command
-                        last_command = word
-                        word_used = False
+                for word in words:
+                    if word == "öffne" or word == "öffner": #frequently mistake (öffner)
+                        öffnen = True
+
+                if öffnen:
+                    for word in words:
+                        if word == "firefox" and last_command != word:
+                            subprocess.Popen(["/usr/bin/firefox", "startpage.com"])
+                            last_command = word
+                        if word == "schach" and last_command!= word:
+                            subprocess.Popen(["/usr/bin/firefox", "lichess.org"])
+                            last_command = word
+                        if word == "youtube" and last_command!= word:
+                            subprocess.Popen(["/usr/bin/firefox", "youtube.com"])
+                            last_command = word
+                        if word == "signal" and last_command!= word:
+                            subprocess.Popen(["/usr/bin/signal-desktop"])
+                            last_command = word
+                        if word == "discord" and last_command!= word:
+                            subprocess.Popen(["/usr/bin/discord"])
+                            last_command = word
+                        if word == "code" and last_command!= word:
+                            subprocess.run(["flatpak", "run", "com.vscodium.codium"])
+                            last_command = word
+                        if word == "geogebra" and last_command!= word:
+                            subprocess.Popen(["/usr/bin/geogebra"])
+                            last_command = word
+                        if word == "gimp" and last_command!= word:
+                            subprocess.Popen(["/usr/bin/gimp"])
+                            last_command = word
+                        if word == "anki" and last_command!= word:
+                            subprocess.run(["flatpak", "run", "net.ankiweb.Anki"])
+                            last_command = word
+                        if word == "github" and last_command!= word:
+                            subprocess.Popen(["flatpak", "run", "io.github.shiftey.Desktop"])
+                            last_command = word
+                        if word == "whatsapp" or word == "whats-app" and last_command!= word:
+                            subprocess.run(["flatpak", "run", "io.github.mimbrero.WhatsAppDesktop"])
+                            last_command = word
+                    öffnen = False
+                
+                
             if dump_fn is not None:
                 dump_fn.write(data)
 
