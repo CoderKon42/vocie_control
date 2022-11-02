@@ -87,6 +87,7 @@ try:
                     if word == "öffne" or word == "öffner": #frequently mistake (öffner)
                         öffnen = True
 
+
                 if öffnen:
                     for word in words:
                         if word == "firefox" and last_command != word:
