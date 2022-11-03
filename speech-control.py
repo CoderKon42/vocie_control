@@ -20,6 +20,9 @@ def open(Arr):
         if word == "firefox" and last_command != word:
             subprocess.Popen(["/usr/bin/firefox", "startpage.com"])
             last_command = word
+        if word == "kommandozeile" and last_command!= word:
+            subprocess.Popen(["/usr/bin/gnome-terminal"])
+            last_command = word
         if word == "schach" and last_command!= word:
             subprocess.Popen(["/usr/bin/firefox", "lichess.org"])
             last_command = word
