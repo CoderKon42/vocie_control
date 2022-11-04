@@ -14,6 +14,21 @@ words = []
 öffnen = False
 last_command_opened = ''
 last_command_closed = ''
+def confirm(Arr):
+    for word in Arr:
+        if word == "bestätige" or word == "bestätigen":
+            return True
+    return False
+
+def computertasks (Arr):
+    for word in Arr:
+        if word == "abmelden":
+            if confirm(Arr):
+                subprocess.Popen(["pkill", "-u", "konstantinm"])
+        if word == "herunterfahren":
+            if confirm(Arr):
+                subprocess.Popen(["pkill", "-u", "konstantinm"])
+
 def close(Arr):
     global last_command_closed
     for word in Arr:
@@ -155,6 +170,8 @@ try:
                        open(words)
                     if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
                        close(words)
+                    if word == "computer":
+                       computertasks(words)
 
                 last_command_opened = ""
                 last_command_closed = ""
@@ -168,6 +185,8 @@ try:
                        open(words)
                     if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
                        close(words)
+                    if word == "computer":
+                       computertasks(words)
 
 
             
