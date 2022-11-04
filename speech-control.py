@@ -12,47 +12,81 @@ from vosk import Model, KaldiRecognizer
 q = queue.Queue()
 words = []
 öffnen = False
-last_command = ''
+last_command_opened = ''
+last_command_closed = ''
+def close(Arr):
+    global last_command_closed
+    for word in Arr:
+        if word == "github" and last_command_closed != word:
+            subprocess.Popen(["pkill", "github-desktop"])
+            last_command_closed = word
+        if word == "discord" and last_command_closed != word:
+            subprocess.Popen(["pkill", "Discord"])
+            last_command_closed = word
+        if word == "firefox" and last_command_closed != word:
+            subprocess.Popen(["pkill", "firefox"])
+            last_command_closed = word
+        if word == "signal" and last_command_closed!= word:
+            subprocess.Popen(["pkill", "signal-desktop"])
+            last_command_closed = word
+        if word == "code" and last_command_closed!= word:
+            subprocess.Popen(["pkill", "codium"])
+            last_command_closed = word
+        if word == "geogebra" and last_command_closed!= word:
+            subprocess.Popen(["pkill", "geogebra"])
+            subprocess.Popen(["pkill", "electron"])
+            last_command_closed = word
+        if word == "gimp" and last_command_closed!= word:
+            subprocess.Popen(["pkill", "gimp"])
+            last_command_closed = word
+        if word == "anki" and last_command_closed!= word:
+            subprocess.Popen(["pkill", "anki"])
+            last_command_closed = word
+        if word == "whatsapp" or word == "whats-app" and last_command_closed!= word:
+            subprocess.Popen(["pkill", "whatsapp"])
+            last_command_closed = word
+        
+        
 
 def open(Arr):
-    global last_command
+    global last_command_opened
     for word in Arr:
-        if word == "firefox" and last_command != word:
+        if word == "firefox" and last_command_opened != word:
             subprocess.Popen(["/usr/bin/firefox", "startpage.com"])
-            last_command = word
-        if word == "kommandozeile" and last_command!= word:
+            last_command_opened = word
+        if word == "kommandozeile" and last_command_opened!= word:
             subprocess.Popen(["/usr/bin/gnome-terminal"])
-            last_command = word
-        if word == "schach" and last_command!= word:
+            last_command_opened = word
+        if word == "schach" and last_command_opened!= word:
             subprocess.Popen(["/usr/bin/firefox", "lichess.org"])
-            last_command = word
-        if word == "youtube" and last_command!= word:
+            last_command_opened = word
+        if word == "youtube" and last_command_opened!= word:
             subprocess.Popen(["/usr/bin/firefox", "youtube.com"])
-            last_command = word
-        if word == "signal" and last_command!= word:
+            last_command_opened = word
+        if word == "signal" and last_command_opened!= word:
             subprocess.Popen(["/usr/bin/signal-desktop"])
-            last_command = word
-        if word == "discord" and last_command!= word:
+            last_command_opened = word
+        if word == "discord" and last_command_opened!= word:
             subprocess.Popen(["/usr/bin/discord"])
-            last_command = word
-        if word == "code" and last_command!= word:
+            last_command_opened = word
+        if word == "code" and last_command_opened!= word:
             subprocess.Popen(["flatpak", "run", "com.vscodium.codium"])
-            last_command = word
-        if word == "geogebra" and last_command!= word:
+            last_command_opened = word
+        if word == "geogebra" and last_command_opened!= word:
             subprocess.Popen(["/usr/bin/geogebra"])
-            last_command = word
-        if word == "gimp" and last_command!= word:
+            last_command_opened = word
+        if word == "gimp" and last_command_opened!= word:
             subprocess.Popen(["/usr/bin/gimp"])
-            last_command = word
-        if word == "anki" and last_command!= word:
+            last_command_opened = word
+        if word == "anki" and last_command_opened!= word:
             subprocess.Popen(["flatpak", "run", "net.ankiweb.Anki"])
-            last_command = word
-        if word == "github" and last_command!= word:
+            last_command_opened = word
+        if word == "github" and last_command_opened!= word:
             subprocess.Popen(["flatpak", "run", "io.github.shiftey.Desktop"])
-            last_command = word
-        if word == "whatsapp" or word == "whats-app" and last_command!= word:
+            last_command_opened = word
+        if word == "whatsapp" or word == "whats-app" and last_command_opened!= word:
             subprocess.Popen(["flatpak", "run", "io.github.mimbrero.WhatsAppDesktop"])
-            last_command = word
+            last_command_opened = word
 
 
 def int_or_str(text):
@@ -119,7 +153,11 @@ try:
                 for word in words:
                     if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
                        open(words)
-                last_command = ""
+                    if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
+                       close(words)
+
+                last_command_opened = ""
+                last_command_closed = ""
             else:
                 vc = json.loads(rec.PartialResult())
                 words = vc['partial'].split()
@@ -128,6 +166,8 @@ try:
                 for word in words:
                     if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
                        open(words)
+                    if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
+                       close(words)
 
 
             
