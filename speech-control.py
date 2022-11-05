@@ -27,7 +27,7 @@ def computertasks (Arr):
                 subprocess.Popen(["pkill", "-u", "konstantinm"])
         if word == "herunterfahren":
             if confirm(Arr):
-                subprocess.Popen(["shutdown", "-h 0"])
+                subprocess.Popen(["shutdown", "-h","0"])
 
 def close(Arr):
     global last_command_closed
