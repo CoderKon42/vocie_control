@@ -27,13 +27,16 @@ def computertasks (Arr):
                 subprocess.Popen(["pkill", "-u", "konstantinm"])
         if word == "herunterfahren":
             if confirm(Arr):
-                subprocess.Popen(["shutdown", "-h 0"])
+                subprocess.Popen(["shutdown", "-h","0"])
 
 def close(Arr):
     global last_command_closed
     for word in Arr:
         if word == "github" and last_command_closed != word:
             subprocess.Popen(["pkill", "github-desktop"])
+            last_command_closed = word
+        if word == "blender" and last_command_closed != word:
+            subprocess.Popen(["pkill", "blender"])
             last_command_closed = word
         if word == "discord" and last_command_closed != word:
             subprocess.Popen(["pkill", "Discord"])
@@ -68,6 +71,9 @@ def open(Arr):
     for word in Arr:
         if word == "firefox" and last_command_opened != word:
             subprocess.Popen(["/usr/bin/firefox", "startpage.com"])
+            last_command_opened = word
+        if word == "blender" and last_command_opened != word:
+            subprocess.Popen(["/usr/bin/blender"])
             last_command_opened = word
         if word == "kommandozeile" and last_command_opened!= word:
             subprocess.Popen(["/usr/bin/gnome-terminal"])
