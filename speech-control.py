@@ -41,7 +41,7 @@ def close(Arr):
         if word == "blender" and last_command_closed != word:
             subprocess.Popen(["pkill", "blender"])
             last_command_closed = word
-        if word == "discord" and last_command_closed != word:
+        if word == "discord" or word == "disco" and last_command_closed != word:
             subprocess.Popen(["pkill", "Discord"])
             last_command_closed = word
         if word == "firefox" and last_command_closed != word:
@@ -94,7 +94,7 @@ def open(Arr):
         if word == "signal" and last_command_opened!= word:
             subprocess.Popen(["/usr/bin/signal-desktop"])
             last_command_opened = word
-        if word == "discord" and last_command_opened!= word:
+        if word == "discord"or word == "disco" and last_command_opened!= word:
             subprocess.Popen(["/usr/bin/discord"])
             last_command_opened = word
         if word == "code" and last_command_opened!= word:
