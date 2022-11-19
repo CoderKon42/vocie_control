@@ -189,7 +189,7 @@ try:
             for word in words:
                     if word == "öffne" or word == "öffner" or word == "öffnet" or word == "eröffne"or word == "öffnete": #frequently mistake (öffner & öffnet)
                        open(words)
-                    if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
+                    if word == "schließe" or word == "schließen" or word == "schließt" or word == "schließlich": #frequently mistake (schließen & schließt)
                        close(words)
                     if word == "computer":
                        computertasks(words)
