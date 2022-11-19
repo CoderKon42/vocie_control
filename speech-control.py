@@ -14,9 +14,12 @@ words = []
 öffnen = False
 last_command_opened = ''
 last_command_closed = ''
+tobreak = False
+
+
 def confirm(Arr):
     for word in Arr:
-        if word == "bestätige" or word == "bestätigen":
+        if word == "bestätige" or word == "bestätigen" or word == "bestätigt":
             return True
     return False
 
@@ -177,33 +180,30 @@ try:
             if rec.AcceptWaveform(data):
                 vc = json.loads(rec.Result())
                 words = vc['text'].split()
-                print(words)
-                for word in words:
-                    if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
-                       open(words)
-                    if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
-                       close(words)
-                    if word == "computer":
-                       computertasks(words)
-
-                last_command_opened = ""
-                last_command_closed = ""
             else:
                 vc = json.loads(rec.PartialResult())
                 words = vc['partial'].split()
                 print(words)
 
-                for word in words:
-                    if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
+            for word in words:
+                    if word == "öffne" or word == "öffner" or word == "öffnet" or word == "eröffne": #frequently mistake (öffner & öffnet)
                        open(words)
                     if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
                        close(words)
                     if word == "computer":
                        computertasks(words)
-
-
+                    if word == "sprachsteuerung":
+                        for word2 in words:
+                            if word2 == "beenden" or word2 == "beende" or word2 == "endende":
+                                if confirm(words):
+                                    tobreak = True
             
-                
+            if rec.AcceptWaveform(data):
+                last_command_opened = ""
+                last_command_closed = ""
+
+            if tobreak:
+                break    
                 
             if dump_fn is not None:
                 dump_fn.write(data)
