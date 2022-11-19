@@ -63,6 +63,10 @@ def close(Arr):
         if word == "whatsapp" or word == "whats-app" and last_command_closed!= word:
             subprocess.Popen(["pkill", "whatsapp"])
             last_command_closed = word
+        if word == "cura" or word == "hurra" and last_command_closed!= word:
+            subprocess.Popen(["pkill", "Ultimaker-Cura"])# frequently mistake (hurra)
+            last_command_closed = word
+        
         
         
 
@@ -107,6 +111,9 @@ def open(Arr):
             last_command_opened = word
         if word == "whatsapp" or word == "whats-app" and last_command_opened!= word:
             subprocess.Popen(["flatpak", "run", "io.github.mimbrero.WhatsAppDesktop"])
+            last_command_opened = word
+        if word == "cura" or word == "hurra" and last_command_opened!= word: # frequently mistake (hurra)
+            subprocess.Popen(["flatpak", "run", "com.ultimaker.cura"])
             last_command_opened = word
 
 
