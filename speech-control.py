@@ -180,13 +180,14 @@ try:
             if rec.AcceptWaveform(data):
                 vc = json.loads(rec.Result())
                 words = vc['text'].split()
+                print(words)
             else:
                 vc = json.loads(rec.PartialResult())
                 words = vc['partial'].split()
                 print(words)
 
             for word in words:
-                    if word == "öffne" or word == "öffner" or word == "öffnet" or word == "eröffne": #frequently mistake (öffner & öffnet)
+                    if word == "öffne" or word == "öffner" or word == "öffnet" or word == "eröffne"or word == "öffnete": #frequently mistake (öffner & öffnet)
                        open(words)
                     if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
                        close(words)
