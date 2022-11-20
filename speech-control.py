@@ -14,6 +14,9 @@ words = []
 öffnen = False
 last_command_opened = ''
 last_command_closed = ''
+tobreak = False
+
+
 def confirm(Arr):
     for word in Arr:
         if word == "bestätige" or word == "bestätigen":
@@ -185,6 +188,11 @@ try:
                        close(words)
                     if word == "computer":
                        computertasks(words)
+                    if word == "sprachsteuerung":
+                        for word2 in words:
+                            if word2 == "beenden" or word2 == "beende":
+                                if confirm(words):
+                                    tobreak = True
 
                 last_command_opened = ""
                 last_command_closed = ""
@@ -200,10 +208,16 @@ try:
                        close(words)
                     if word == "computer":
                        computertasks(words)
+                    if word == "sprachsteuerung":
+                        for word2 in words:
+                            if word2 == "beenden" or word2 == "beende":
+                                if confirm(words):
+                                    tobreak = True
 
 
             
-                
+            if tobreak:
+                break    
                 
             if dump_fn is not None:
                 dump_fn.write(data)
