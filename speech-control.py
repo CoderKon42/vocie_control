@@ -185,7 +185,6 @@ try:
                 if isactive:
                     for word in words:
                         if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
-                            print(isactive)
                             open(words)
                         if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
                             close(words)
@@ -197,9 +196,9 @@ try:
                             if word2 == "beenden" or word2 == "beende":
                                 if confirm(words):
                                     tobreak = True
-                            if word2 == "deaktivieren":
+                            if word2 == "deaktivieren" or word2 =="deaktiviere":
                                 isactive = False
-                            if word2 == "aktivieren":
+                            if word2 == "aktivieren" or word2 =="aktiviere":
                                 isactive = True
 
                 last_command_opened = ""
