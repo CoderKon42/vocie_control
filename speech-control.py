@@ -15,6 +15,7 @@ words = []
 last_command_opened = ''
 last_command_closed = ''
 tobreak = False
+isactive = True
 
 
 def confirm(Arr):
@@ -181,18 +182,25 @@ try:
                 vc = json.loads(rec.Result())
                 words = vc['text'].split()
                 print(words)
+                if isactive:
+                    for word in words:
+                        if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
+                            print(isactive)
+                            open(words)
+                        if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
+                            close(words)
+                        if word == "computer":
+                            computertasks(words)
                 for word in words:
-                    if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
-                       open(words)
-                    if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
-                       close(words)
-                    if word == "computer":
-                       computertasks(words)
                     if word == "sprachsteuerung":
                         for word2 in words:
                             if word2 == "beenden" or word2 == "beende":
                                 if confirm(words):
                                     tobreak = True
+                            if word2 == "deaktivieren":
+                                isactive = False
+                            if word2 == "aktivieren":
+                                isactive = True
 
                 last_command_opened = ""
                 last_command_closed = ""
@@ -201,18 +209,25 @@ try:
                 words = vc['partial'].split()
                 print(words)
                 #if the following part is outside the if statment, since it is in if as well as in else, the quality of speechrecognition will decrease
+                if isactive:
+                    for word in words:
+                        if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
+                            print(isactive)
+                            open(words)
+                        if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
+                            close(words)
+                        if word == "computer":
+                            computertasks(words)
                 for word in words:
-                    if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
-                       open(words)
-                    if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
-                       close(words)
-                    if word == "computer":
-                       computertasks(words)
                     if word == "sprachsteuerung":
                         for word2 in words:
                             if word2 == "beenden" or word2 == "beende":
                                 if confirm(words):
                                     tobreak = True
+                            if word2 == "deaktivieren":
+                                isactive = False
+                            if word2 == "aktivieren":
+                                isactive = True
 
 
             
