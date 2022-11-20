@@ -200,7 +200,7 @@ try:
                 vc = json.loads(rec.PartialResult())
                 words = vc['partial'].split()
                 print(words)
-                #if the following part is outside the if statment, since it is in if as well as in else, but quality of speechrecognition decreases
+                #if the following part is outside the if statment, since it is in if as well as in else, the quality of speechrecognition will decrease
                 for word in words:
                     if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
                        open(words)
