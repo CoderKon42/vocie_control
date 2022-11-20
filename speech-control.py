@@ -94,7 +94,7 @@ def open(Arr):
         if word == "signal" and last_command_opened!= word:
             subprocess.Popen(["/usr/bin/signal-desktop"])
             last_command_opened = word
-        if word == "discord"or word == "disco" and last_command_opened!= word:
+        if word == "discord" and last_command_opened!= word:
             subprocess.Popen(["/usr/bin/discord"])
             last_command_opened = word
         if word == "code" and last_command_opened!= word:
@@ -181,28 +181,42 @@ try:
                 vc = json.loads(rec.Result())
                 words = vc['text'].split()
                 print(words)
-            else:
-                vc = json.loads(rec.PartialResult())
-                words = vc['partial'].split()
-                print(words)
-
-            for word in words:
-                    if word == "öffne" or word == "öffner" or word == "öffnet" or word == "eröffne"or word == "öffnete": #frequently mistake (öffner & öffnet)
+                for word in words:
+                    if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
                        open(words)
-                    if word == "schließe" or word == "schließen" or word == "schließt" or word == "schließlich": #frequently mistake (schließen & schließt)
+                    if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
                        close(words)
                     if word == "computer":
                        computertasks(words)
                     if word == "sprachsteuerung":
                         for word2 in words:
-                            if word2 == "beenden" or word2 == "beende" or word2 == "endende":
+                            if word2 == "beenden" or word2 == "beende":
                                 if confirm(words):
                                     tobreak = True
-            
-            if rec.AcceptWaveform(data):
+
                 last_command_opened = ""
                 last_command_closed = ""
+            else:
+                vc = json.loads(rec.PartialResult())
+                words = vc['partial'].split()
+                print(words)
 
+                for word in words:
+                    if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
+                       open(words)
+                    if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
+                       close(words)
+                    if word == "computer":
+                       computertasks(words)
+                    if word == "sprachsteuerung":
+                        for word2 in words:
+                            if word2 == "beenden" or word2 == "beende":
+                                if confirm(words):
+                                    tobreak = True
+
+
+            
+                
             if tobreak:
                 break    
                 
@@ -214,3 +228,4 @@ except KeyboardInterrupt:
     parser.exit(0)
 except Exception as e:
     parser.exit(type(e).__name__ + ": " + str(e))
+
