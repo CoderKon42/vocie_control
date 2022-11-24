@@ -19,6 +19,7 @@ isactive = True
 
 def whatToDo(Arr):
     global isactive
+    global tobreak
     for word in Arr:  
                     if isactive:
                         if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
