@@ -201,13 +201,14 @@ try:
             if rec.AcceptWaveform(data):
                 vc = json.loads(rec.Result())
                 words = vc['text'].split()
+                whatToDo(words)  
                 last_command_opened = ""
                 last_command_closed = ""
             else:
                 vc = json.loads(rec.PartialResult())
                 words = vc['partial'].split()
-            print(words)
-            whatToDo(words)        
+                whatToDo(words)  
+            print(words)      
 
  
             if tobreak:
