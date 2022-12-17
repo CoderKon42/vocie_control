@@ -16,6 +16,7 @@ last_command_opened = ''
 last_command_closed = ''
 tobreak = False
 isactive = True
+numbers_one_to_twenty = ["null", "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf", "zwölf", "dreizehn", "vierzehn", "fünfzehn","sechzehn","siebzehn", "achtzehn","neunzehn","zwanzig"]
 
 def whatToDo(Arr):
     global isactive
@@ -44,7 +45,17 @@ def confirm(Arr):
             return True
     return False
 
+def getPercent(Arr):
+    for word in Arr:
+        if word in numbers_one_to_twenty:
+            return numbers_one_to_twenty.index(word)
+    else:
+        return None
+
+
 def computertasks (Arr):
+    global last_command_closed
+    global last_command_opened
     for word in Arr:
         if word == "abmelden":
             if confirm(Arr):
@@ -52,7 +63,19 @@ def computertasks (Arr):
         if word == "herunterfahren":
             if confirm(Arr):
                 subprocess.Popen(["shutdown", "-h","0"])
-
+        if word == "neustarten":
+            if confirm(Arr):
+                subprocess.Popen(["reboot"])
+        if word == "leiser" and last_command_closed != word:
+            percent = getPercent(Arr)
+            if percent is not None:
+                subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%-"])
+                last_command_closed = word
+        if word == "lauter" or word == "laut" or word == "lauta" and last_command_opened != word:
+            percent = getPercent(Arr)
+            if percent is not None:
+                subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%+"])
+                last_command_opened = word
 def close(Arr):
     global last_command_closed
     for word in Arr:
