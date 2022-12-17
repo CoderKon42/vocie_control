@@ -12,8 +12,7 @@ from vosk import Model, KaldiRecognizer
 q = queue.Queue()
 words = []
 öffnen = False
-last_command_opened = ''
-last_command_closed = ''
+last_command = ''
 tobreak = False
 isactive = True
 numbers_one_to_twenty = ["null", "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf", "zwölf", "dreizehn", "vierzehn", "fünfzehn","sechzehn","siebzehn", "achtzehn","neunzehn","zwanzig"]
@@ -34,29 +33,28 @@ apps = [
 {"openname": "com.ultimaker.cura", "isflatpak": True, "parameter": None , "tokill": "Ultimaker-Cura"}
 ]
 identifier = ["blender", 0, "terminal", 1, "kommandozeile", 1, "discord", 2, "disco", 2, "firefox", 3, "schach", 4, "youtube", 5, "signal", 6, "gimp", 7, "geogebra", 8, "code", 9, "anki", 10, "github", 11, "whatsapp", 12, "whats-app", 12, "cura", 13, "hurra", 13]
-
-
+# name of the app and/or nickname followed by the index of where the app is in the apps list
 
 def whatToDo(Arr):
     global isactive
     global tobreak
     for word in Arr:  
-                    if isactive:
-                        if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
-                            open(words)
-                        if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
-                            close(words)
-                        if word == "computer":
-                            computertasks(words)
-                    if word == "sprachsteuerung":
-                        for word2 in words:
-                            if word2 == "beenden" or word2 == "beende":
-                                if confirm(words):
-                                    tobreak = True
-                            if word2 == "deaktivieren" or word2 =="deaktiviere":
-                                isactive = False
-                            if word2 == "aktivieren" or word2 =="aktiviere":
-                                isactive = True
+        if isactive:
+            if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
+                open(words)
+            if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
+                close(words)
+            if word == "computer":
+                computertasks(words)
+        if word == "sprachsteuerung":
+            for word2 in words:
+                if word2 == "beenden" or word2 == "beende":
+                    if confirm(words):
+                        tobreak = True
+                if word2 == "deaktivieren" or word2 =="deaktiviere":
+                    isactive = False
+                if word2 == "aktivieren" or word2 =="aktiviere":
+                    isactive = True
 
 def confirm(Arr):
     for word in Arr:
@@ -68,13 +66,11 @@ def getPercent(Arr):
     for word in Arr:
         if word in numbers_one_to_twenty:
             return numbers_one_to_twenty.index(word)
-    else:
-        return None
+    return None
 
 
 def computertasks (Arr):
-    global last_command_closed
-    global last_command_opened
+    global last_command
     for word in Arr:
         if word == "abmelden":
             if confirm(Arr):
@@ -85,77 +81,43 @@ def computertasks (Arr):
         if word == "neustarten":
             if confirm(Arr):
                 subprocess.Popen(["reboot"])
-        if word == "leiser" and last_command_closed != word:
+        if word == "leiser" and last_command!= word:
             percent = getPercent(Arr)
             if percent is not None:
                 subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%-"])
-                last_command_closed = word
-        if word == "lauter" or word == "laut" or word == "lauta" and last_command_opened != word:
+                last_command = word
+        if word == "lauter" or word == "laut" or word == "lauta" and last_command != word:
             percent = getPercent(Arr)
             if percent is not None:
                 subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%+"])
-                last_command_opened = word
+                last_command = word
 
 
 def open(Arr):
-    global last_command_opened
+    global last_command
     for word in Arr:
-        if word in identifier and word != last_command_opened:
+        if word in identifier and word != last_command:
             app = apps[identifier[identifier.index(word)+1]]
-            print(app)
             if app['isflatpak']:
                 if app["parameter"] == None:
                     subprocess.Popen(["flatpak", "run", app['openname']])
-                    last_command_opened = word
                 else:
                     subprocess.Popen(["flatpak", "run", ['openname'], app['parameter']])
-                    last_command_opened = word
             else:
                 if app["parameter"] == None:
                     subprocess.Popen([f"/usr/bin/{app['openname']}"])
-                    last_command_opened = word
                 else:
                     subprocess.Popen([f"/usr/bin/{app['openname']}", app['parameter']])
-                    last_command_opened = word
+            last_command = word
 
 def close(Arr):
-    global last_command_closed
     for word in Arr:
-        if word == "github" or word == "getappt" and last_command_closed != word:
-            subprocess.Popen(["pkill", "github-desktop"])
-            last_command_closed = word
-        if word == "blender" and last_command_closed != word:
-            subprocess.Popen(["pkill", "blender"])
-            last_command_closed = word
-        if word == "discord" or word == "disco" and last_command_closed != word:
-            subprocess.Popen(["pkill", "Discord"])
-            last_command_closed = word
-        if word == "firefox" and last_command_closed != word:
-            subprocess.Popen(["pkill", "firefox"])
-            last_command_closed = word
-        if word == "signal" and last_command_closed!= word:
-            subprocess.Popen(["pkill", "signal-desktop"])
-            last_command_closed = word
-        if word == "code" and last_command_closed!= word:
-            subprocess.Popen(["pkill", "codium"])
-            last_command_closed = word
-        if word == "geogebra" and last_command_closed!= word:
-            subprocess.Popen(["pkill", "geogebra"])
-            subprocess.Popen(["pkill", "electron"])
-            last_command_closed = word
-        if word == "gimp" and last_command_closed!= word:
-            subprocess.Popen(["pkill", "gimp"])
-            last_command_closed = word
-        if word == "anki" and last_command_closed!= word:
-            subprocess.Popen(["pkill", "anki"])
-            last_command_closed = word
-        if word == "whatsapp" or word == "whats-app" and last_command_closed!= word:
-            subprocess.Popen(["pkill", "whatsapp"])
-            last_command_closed = word
-        if word == "cura" or word == "hurra" and last_command_closed!= word:
-            subprocess.Popen(["pkill", "Ultimaker-Cura"])# frequently mistake (hurra)
-            last_command_closed = word
-
+        if word in identifier:
+            app = apps[identifier[identifier.index(word)+1]]
+            if app['isflatpak']:
+                subprocess.Popen(["pkill", app['tokill']])
+            else:
+                subprocess.Popen(["shutdown", app['openname']])
 
 def int_or_str(text):
     """Helper function for argument parsing."""
@@ -226,7 +188,6 @@ try:
                 whatToDo(words)  
             print(words)      
 
- 
             if tobreak:
                 break    
                 
@@ -238,4 +199,3 @@ except KeyboardInterrupt:
     parser.exit(0)
 except Exception as e:
     parser.exit(type(e).__name__ + ": " + str(e))
-
