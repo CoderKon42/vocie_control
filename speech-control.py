@@ -17,6 +17,25 @@ last_command_closed = ''
 tobreak = False
 isactive = True
 numbers_one_to_twenty = ["null", "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf", "zwölf", "dreizehn", "vierzehn", "fünfzehn","sechzehn","siebzehn", "achtzehn","neunzehn","zwanzig"]
+apps = [
+{"openname": "blender", "isflatpak": False, "parameter": None}, 
+{"openname": "gnome-terminal", "isflatpak": False, "parameter": None},
+{"openname": "discord", "isflatpak": False, "parameter": None},
+{"openname": "firefox", "isflatpak": False, "parameter": "startpage.com"},
+{"openname": "firefox", "isflatpak": False, "parameter": "lichess.org"},
+{"openname": "firefox", "isflatpak": False, "parameter": "youtube.com"},
+{"openname": "signal-desktop", "isflatpak": False, "parameter": None},
+{"openname": "gimp", "isflatpak": False, "parameter": None},
+{"openname": "geogebra", "isflatpak": False, "parameter": None, "tokill": "geogebra && pkill electron"},
+{"openname": "com.vscodium.codium", "isflatpak": True, "parameter": None, "tokill":"codium"},
+{"openname": "net.ankiweb.Anki", "isflatpak": True, "parameter": None, "tokill": "anki"},
+{"openname": "io.github.shiftey.Desktop", "isflatpak": True, "parameter": None, "tokill": "github-desktop"},
+{"openname": "io.github.mimbrero.WhatsAppDesktop", "isflatpak": True, "parameter": None, "tokill": "whatsapp"},
+{"openname": "com.ultimaker.cura", "isflatpak": True, "parameter": None , "tokill": "Ultimaker-Cura"}
+]
+identifier = ["blender", 0, "terminal", 1, "kommandozeile", 1, "discord", 2, "disco", 2, "firefox", 3, "schach", 4, "youtube", 5, "signal", 6, "gimp", 7, "geogebra", 8, "code", 9, "anki", 10, "github", 11, "whatsapp", 12, "whats-app", 12, "cura", 13, "hurra", 13]
+
+
 
 def whatToDo(Arr):
     global isactive
@@ -76,6 +95,29 @@ def computertasks (Arr):
             if percent is not None:
                 subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%+"])
                 last_command_opened = word
+
+
+def open(Arr):
+    global last_command_opened
+    for word in Arr:
+        if word in identifier and word != last_command_opened:
+            app = apps[identifier[identifier.index(word)+1]]
+            print(app)
+            if app['isflatpak']:
+                if app["parameter"] == None:
+                    subprocess.Popen(["flatpak", "run", app['openname']])
+                    last_command_opened = word
+                else:
+                    subprocess.Popen(["flatpak", "run", ['openname'], app['parameter']])
+                    last_command_opened = word
+            else:
+                if app["parameter"] == None:
+                    subprocess.Popen([f"/usr/bin/{app['openname']}"])
+                    last_command_opened = word
+                else:
+                    subprocess.Popen([f"/usr/bin/{app['openname']}", app['parameter']])
+                    last_command_opened = word
+
 def close(Arr):
     global last_command_closed
     for word in Arr:
@@ -113,55 +155,6 @@ def close(Arr):
         if word == "cura" or word == "hurra" and last_command_closed!= word:
             subprocess.Popen(["pkill", "Ultimaker-Cura"])# frequently mistake (hurra)
             last_command_closed = word
-        
-        
-        
-
-def open(Arr):
-    global last_command_opened
-    for word in Arr:
-        if word == "firefox" and last_command_opened != word:
-            subprocess.Popen(["/usr/bin/firefox", "startpage.com"])
-            last_command_opened = word
-        if word == "blender" and last_command_opened != word:
-            subprocess.Popen(["/usr/bin/blender"])
-            last_command_opened = word
-        if word == "kommandozeile" and last_command_opened!= word:
-            subprocess.Popen(["/usr/bin/gnome-terminal"])
-            last_command_opened = word
-        if word == "schach" and last_command_opened!= word:
-            subprocess.Popen(["/usr/bin/firefox", "lichess.org"])
-            last_command_opened = word
-        if word == "youtube" and last_command_opened!= word:
-            subprocess.Popen(["/usr/bin/firefox", "youtube.com"])
-            last_command_opened = word
-        if word == "signal" and last_command_opened!= word:
-            subprocess.Popen(["/usr/bin/signal-desktop"])
-            last_command_opened = word
-        if word == "discord" and last_command_opened!= word:
-            subprocess.Popen(["/usr/bin/discord"])
-            last_command_opened = word
-        if word == "code" and last_command_opened!= word:
-            subprocess.Popen(["flatpak", "run", "com.vscodium.codium"])
-            last_command_opened = word
-        if word == "geogebra" and last_command_opened!= word:
-            subprocess.Popen(["/usr/bin/geogebra"])
-            last_command_opened = word
-        if word == "gimp" and last_command_opened!= word:
-            subprocess.Popen(["/usr/bin/gimp"])
-            last_command_opened = word
-        if word == "anki" and last_command_opened!= word:
-            subprocess.Popen(["flatpak", "run", "net.ankiweb.Anki"])
-            last_command_opened = word
-        if word == "github" or word == "getappt" and last_command_opened!= word:
-            subprocess.Popen(["flatpak", "run", "io.github.shiftey.Desktop"])
-            last_command_opened = word
-        if word == "whatsapp" or word == "whats-app" and last_command_opened!= word:
-            subprocess.Popen(["flatpak", "run", "io.github.mimbrero.WhatsAppDesktop"])
-            last_command_opened = word
-        if word == "cura" or word == "hurra" and last_command_opened!= word: # frequently mistake (hurra)
-            subprocess.Popen(["flatpak", "run", "com.ultimaker.cura"])
-            last_command_opened = word
 
 
 def int_or_str(text):
