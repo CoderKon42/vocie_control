@@ -17,15 +17,15 @@ tobreak = False
 isactive = True
 numbers_one_to_twenty = ["null", "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf", "zwölf", "dreizehn", "vierzehn", "fünfzehn","sechzehn","siebzehn", "achtzehn","neunzehn","zwanzig"]
 apps = [
-{"openname": "blender", "isflatpak": False, "parameter": None}, 
-{"openname": "gnome-terminal", "isflatpak": False, "parameter": None},
-{"openname": "discord", "isflatpak": False, "parameter": None},
-{"openname": "firefox", "isflatpak": False, "parameter": "startpage.com"},
-{"openname": "firefox", "isflatpak": False, "parameter": "lichess.org"},
-{"openname": "firefox", "isflatpak": False, "parameter": "youtube.com"},
-{"openname": "signal-desktop", "isflatpak": False, "parameter": None},
-{"openname": "gimp", "isflatpak": False, "parameter": None},
-{"openname": "geogebra", "isflatpak": False, "parameter": None, "tokill": "geogebra && pkill electron"},
+{"openname": "blender", "isflatpak": False, "parameter": None, "elsekill": None}, 
+{"openname": "gnome-terminal", "isflatpak": False, "parameter": None, "elsekill": None},
+{"openname": "discord", "isflatpak": False, "parameter": None ,"elsekill": None},
+{"openname": "firefox", "isflatpak": False, "parameter": "startpage.com", "elsekill": None},
+{"openname": "firefox", "isflatpak": False, "parameter": "lichess.org", "elsekill": None},
+{"openname": "firefox", "isflatpak": False, "parameter": "youtube.com", "elsekill": None},
+{"openname": "signal-desktop", "isflatpak": False, "parameter": None, "elsekill": None},
+{"openname": "gimp", "isflatpak": False, "parameter": None, "elsekill": None},
+{"openname": "geogebra", "isflatpak": False, "parameter": None, "elsekill": "electron"},
 {"openname": "com.vscodium.codium", "isflatpak": True, "parameter": None, "tokill":"codium"},
 {"openname": "net.ankiweb.Anki", "isflatpak": True, "parameter": None, "tokill": "anki"},
 {"openname": "io.github.shiftey.Desktop", "isflatpak": True, "parameter": None, "tokill": "github-desktop"},
@@ -110,6 +110,8 @@ def open(Arr):
                     subprocess.Popen([f"/usr/bin/{app['openname']}", app['parameter']])
             last_command = word
 
+open(["geogebra"])
+
 def close(Arr):
     for word in Arr:
         if word in identifier:
@@ -117,7 +119,11 @@ def close(Arr):
             if app['isflatpak']:
                 subprocess.Popen(["pkill", app['tokill']])
             else:
-                subprocess.Popen(["pkill", app['openname']])
+                if app["elsekill"] == None:
+                    subprocess.Popen(["pkill", app['openname']])
+                else:
+                    subprocess.Popen(["pkill", app['openname']])
+                    subprocess.Popen(["pkill", app['elsekill']])
 
 def int_or_str(text):
     """Helper function for argument parsing."""
