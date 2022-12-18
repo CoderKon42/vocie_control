@@ -26,11 +26,11 @@ apps = [
 {"openname": "signal-desktop", "isflatpak": False, "parameter": None, "elsekill": None},
 {"openname": "gimp", "isflatpak": False, "parameter": None, "elsekill": None},
 {"openname": "geogebra", "isflatpak": False, "parameter": None, "elsekill": "electron"},
-{"openname": "com.vscodium.codium", "isflatpak": True, "parameter": None, "tokill":"codium"},
-{"openname": "net.ankiweb.Anki", "isflatpak": True, "parameter": None, "tokill": "anki"},
-{"openname": "io.github.shiftey.Desktop", "isflatpak": True, "parameter": None, "tokill": "github-desktop"},
-{"openname": "io.github.mimbrero.WhatsAppDesktop", "isflatpak": True, "parameter": None, "tokill": "whatsapp"},
-{"openname": "com.ultimaker.cura", "isflatpak": True, "parameter": None , "tokill": "Ultimaker-Cura"}
+{"openname": "com.vscodium.codium", "isflatpak": True, "parameter": None, "tokill":"codium", "elsekill": None},
+{"openname": "net.ankiweb.Anki", "isflatpak": True, "parameter": None, "tokill": "anki", "elsekill": None},
+{"openname": "io.github.shiftey.Desktop", "isflatpak": True, "parameter": None, "tokill": "github-desktop", "elsekill": None},
+{"openname": "io.github.mimbrero.WhatsAppDesktop", "isflatpak": True, "parameter": None, "tokill": "whatsapp", "elsekill": None},
+{"openname": "com.ultimaker.cura", "isflatpak": True, "parameter": None , "tokill": "Ultimaker-Cura", "elsekill": None}
 ]
 identifier = ["blender", 0, "terminal", 1, "kommandozeile", 1, "discord", 2, "disco", 2, "firefox", 3, "schach", 4, "youtube", 5, "signal", 6, "gimp", 7, "geogebra", 8, "code", 9, "anki", 10, "github", 11, "whatsapp", 12, "whats-app", 12, "cura", 13, "hurra", 13]
 # name of the app and/or nickname followed by the index of where the app is in the apps list
@@ -117,7 +117,11 @@ def close(Arr):
         if word in identifier:
             app = apps[identifier[identifier.index(word)+1]]
             if app['isflatpak']:
-                subprocess.Popen(["pkill", app['tokill']])
+                if app["elsekill"] == None:
+                    subprocess.Popen(["pkill", app['tokill']])
+                else:
+                    subprocess.Popen(["pkill", app['tokill']])
+                    subprocess.Popen(["pkill", app['elsekill']])
             else:
                 if app["elsekill"] == None:
                     subprocess.Popen(["pkill", app['openname']])
