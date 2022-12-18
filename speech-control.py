@@ -117,7 +117,7 @@ def close(Arr):
             if app['isflatpak']:
                 subprocess.Popen(["pkill", app['tokill']])
             else:
-                subprocess.Popen(["shutdown", app['openname']])
+                subprocess.Popen(["pkill", app['openname']])
 
 def int_or_str(text):
     """Helper function for argument parsing."""
