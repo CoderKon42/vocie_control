@@ -110,7 +110,6 @@ def open(Arr):
                     subprocess.Popen([f"/usr/bin/{app['openname']}", app['parameter']])
             last_command = word
 
-open(["geogebra"])
 
 def close(Arr):
     for word in Arr:
@@ -190,8 +189,7 @@ try:
                 vc = json.loads(rec.Result())
                 words = vc['text'].split()
                 whatToDo(words)  
-                last_command_opened = ""
-                last_command_closed = ""
+                last_command = ""
             else:
                 vc = json.loads(rec.PartialResult())
                 words = vc['partial'].split()
