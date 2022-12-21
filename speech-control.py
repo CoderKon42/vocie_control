@@ -32,36 +32,37 @@ apps = [
 {"openname": "io.github.mimbrero.WhatsAppDesktop", "isflatpak": True, "parameter": None, "tokill": "whatsapp", "elsekill": None},
 {"openname": "com.ultimaker.cura", "isflatpak": True, "parameter": None , "tokill": "Ultimaker-Cura", "elsekill": None}
 ]
-identifier = ["blender", 0, "terminal", 1, "kommandozeile", 1, "discord", 2, "disco", 2, "firefox", 3, "schach", 4, "youtube", 5, "signal", 6, "gimp", 7, "geogebra", 8, "code", 9, "anki", 10,"anke", 10, "github", 11, "whatsapp", 12, "whats-app", 12, "cura", 13, "hurra", 13]
+identifier = ["blender", 0, "terminal", 1, "kommandozeile", 1, "discord", 2, "disco", 2, "firefox", 3, "schach", 4, "youtube", 5, "signal", 6, "gimp", 7, "geogebra", 8, "code", 9, "anki", 10,"anke", 10, "anti", 10, "github", 11, "whatsapp", 12, "whats-app", 12, "cura", 13, "hurra", 13]
 # name of the app and/or nickname followed by the index of where the app is in the apps list
 
 def whatToDo(Arr, issentencecomplete = False):
     global isactive
-    global tobreak
-    for word in Arr:  
-        if isactive:
-            if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
-                open(Arr)
-            if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
-                close(Arr)
-            if word == "computer":
-                computertasks(Arr)
-            if (word == "google" or word == "googles") and issentencecomplete == True:
-                google(Arr, word)
-        if word == "sprachsteuerung":
-            for word2 in Arr:
-                if word2 == "beenden" or word2 == "beende":
-                    if confirm(Arr):
-                        tobreak = True
-                if word2 == "deaktivieren" or word2 =="deaktiviere":
-                    isactive = False
-                if word2 == "aktivieren" or word2 =="aktiviere":
-                    isactive = True
+    global tobreak 
+    if isactive:
+        if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr: #frequently mistake (öffner & öffnet)
+            open(Arr)
+        if "schließe" in Arr or "schließen" in Arr or "schließt" in Arr: #frequently mistake (schließen & schließt)
+            close(Arr)
+        if "computer" in Arr:
+            computertasks(Arr)
+        if ("google" in Arr or "googles" in Arr) and issentencecomplete == True:
+            if "google" in Arr:
+                key = "google"
+            if "googles" in Arr:
+                key = "googles"
+            google(Arr, key)
+    if "sprachsteuerung" in Arr:
+        if "beenden" in Arr or "beende" in Arr:
+            if confirm(Arr):
+                tobreak = True
+        if "deaktivieren" in Arr or "deaktiviere" in Arr:
+            isactive = False
+        if "aktivieren" in Arr or "aktiviere" in Arr:
+            isactive = True
 
 def confirm(Arr):
-    for word in Arr:
-        if word == "bestätige" or word == "bestätigen" or word == "bestätigt":
-            return True
+    if "bestätige" in Arr or "bestätigen" in Arr or "bestätigt" in Arr:
+        return True
     return False
 
 def getPercent(Arr):
@@ -72,26 +73,25 @@ def getPercent(Arr):
 
 def computertasks (Arr):
     global last_command
-    for word in Arr:
-        if word == "abmelden":
-            if confirm(Arr):
-                subprocess.Popen(["pkill", "-u", "konstantinm"])
-        if word == "herunterfahren":
-            if confirm(Arr):
-                subprocess.Popen(["shutdown", "-h","0"])
-        if word == "neustarten":
-            if confirm(Arr):
-                subprocess.Popen(["reboot"])
-        if word == "leiser" and last_command!= word:
-            percent = getPercent(Arr)
-            if percent is not None:
-                subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%-"])
-                last_command = word
-        if (word == "lauter" or word == "laut" or word == "lauta") and last_command != word:
-            percent = getPercent(Arr)
-            if percent is not None:
-                subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%+"])
-                last_command = word
+    if "abmelden" in Arr:
+        if confirm(Arr):
+            subprocess.Popen(["pkill", "-u", "konstantinm"])
+    if "herunterfahren" in Arr:
+        if confirm(Arr):
+            subprocess.Popen(["shutdown", "-h","0"])
+    if "neustarten" in Arr:
+        if confirm(Arr):
+            subprocess.Popen(["reboot"])
+    if "leiser" in Arr and last_command!= "leiser":
+        percent = getPercent(Arr)
+        if percent is not None:
+            subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%-"])
+            last_command = "leiser"
+    if ("lauter" in Arr or "laut" in Arr or "lauta" in Arr) and last_command != "lauter":
+        percent = getPercent(Arr)
+        if percent is not None:
+            subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%+"])
+            last_command = "lauter"
 
 
 def open(Arr):
