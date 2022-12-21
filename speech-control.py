@@ -32,24 +32,26 @@ apps = [
 {"openname": "io.github.mimbrero.WhatsAppDesktop", "isflatpak": True, "parameter": None, "tokill": "whatsapp", "elsekill": None},
 {"openname": "com.ultimaker.cura", "isflatpak": True, "parameter": None , "tokill": "Ultimaker-Cura", "elsekill": None}
 ]
-identifier = ["blender", 0, "terminal", 1, "kommandozeile", 1, "discord", 2, "disco", 2, "firefox", 3, "schach", 4, "youtube", 5, "signal", 6, "gimp", 7, "geogebra", 8, "code", 9, "anki", 10, "github", 11, "whatsapp", 12, "whats-app", 12, "cura", 13, "hurra", 13]
+identifier = ["blender", 0, "terminal", 1, "kommandozeile", 1, "discord", 2, "disco", 2, "firefox", 3, "schach", 4, "youtube", 5, "signal", 6, "gimp", 7, "geogebra", 8, "code", 9, "anki", 10,"anke", 10, "github", 11, "whatsapp", 12, "whats-app", 12, "cura", 13, "hurra", 13]
 # name of the app and/or nickname followed by the index of where the app is in the apps list
 
-def whatToDo(Arr):
+def whatToDo(Arr, issentencecomplete = False):
     global isactive
     global tobreak
     for word in Arr:  
         if isactive:
             if word == "öffne" or word == "öffner" or word == "öffnet": #frequently mistake (öffner & öffnet)
-                open(words)
+                open(Arr)
             if word == "schließe" or word == "schließen" or word == "schließt": #frequently mistake (schließen & schließt)
-                close(words)
+                close(Arr)
             if word == "computer":
-                computertasks(words)
+                computertasks(Arr)
+            if (word == "google" or word == "googles") and issentencecomplete == True:
+                google(Arr, word)
         if word == "sprachsteuerung":
-            for word2 in words:
+            for word2 in Arr:
                 if word2 == "beenden" or word2 == "beende":
-                    if confirm(words):
+                    if confirm(Arr):
                         tobreak = True
                 if word2 == "deaktivieren" or word2 =="deaktiviere":
                     isactive = False
@@ -68,7 +70,6 @@ def getPercent(Arr):
             return numbers_one_to_twenty.index(word)
     return None
 
-
 def computertasks (Arr):
     global last_command
     for word in Arr:
@@ -86,7 +87,7 @@ def computertasks (Arr):
             if percent is not None:
                 subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%-"])
                 last_command = word
-        if word == "lauter" or word == "laut" or word == "lauta" and last_command != word:
+        if (word == "lauter" or word == "laut" or word == "lauta") and last_command != word:
             percent = getPercent(Arr)
             if percent is not None:
                 subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%+"])
@@ -127,6 +128,13 @@ def close(Arr):
                 else:
                     subprocess.Popen(["pkill", app['openname']])
                     subprocess.Popen(["pkill", app['elsekill']])
+
+def google(Arr, keyword):
+        google_index = Arr.index(keyword)
+        aftergoogle = Arr[google_index + 1:]
+        param = '+'.join(aftergoogle)
+        subprocess.Popen(["/usr/bin/firefox", f"https://www.ecosia.org/search?q={param}&addon=firefox&addonversion=4.1.0&method=topbar"])
+
 
 def int_or_str(text):
     """Helper function for argument parsing."""
@@ -188,7 +196,7 @@ try:
             if rec.AcceptWaveform(data):
                 vc = json.loads(rec.Result())
                 words = vc['text'].split()
-                whatToDo(words)  
+                whatToDo(words, True)
                 last_command = ""
             else:
                 vc = json.loads(rec.PartialResult())
