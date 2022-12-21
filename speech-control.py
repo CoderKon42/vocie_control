@@ -39,9 +39,9 @@ def whatToDo(Arr, issentencecomplete = False):
     global isactive
     global tobreak 
     if isactive:
-        if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr: #frequently mistake (öffner & öffnet)
+        if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr:
             open(Arr)
-        if "schließe" in Arr or "schließen" in Arr or "schließt" in Arr: #frequently mistake (schließen & schließt)
+        if "schließe" in Arr or "schließen" in Arr or "schließt" in Arr:
             close(Arr)
         if "computer" in Arr:
             computertasks(Arr)
