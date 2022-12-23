@@ -6,12 +6,12 @@ import sys
 import sounddevice as sd
 import json
 import subprocess
+import os
 
 from vosk import Model, KaldiRecognizer
 
 q = queue.Queue()
 words = []
-öffnen = False
 last_command = ''
 tobreak = False
 isactive = True
@@ -19,7 +19,7 @@ numbers_one_to_twenty = ["null", "eins", "zwei", "drei", "vier", "fünf", "sechs
 apps = [
 {"openname": "blender", "isflatpak": False, "parameter": None, "elsekill": None}, 
 {"openname": "gnome-terminal", "isflatpak": False, "parameter": None, "elsekill": None},
-{"openname": "discord", "isflatpak": False, "parameter": None ,"elsekill": None},
+{"openname": "discord", "isflatpak": False, "parameter": None ,"elsekill": "Discord"},
 {"openname": "firefox", "isflatpak": False, "parameter": "startpage.com", "elsekill": None},
 {"openname": "firefox", "isflatpak": False, "parameter": "lichess.org", "elsekill": None},
 {"openname": "firefox", "isflatpak": False, "parameter": "youtube.com", "elsekill": None},
@@ -37,7 +37,8 @@ identifier = ["blender", 0, "terminal", 1, "kommandozeile", 1, "discord", 2, "di
 
 def whatToDo(Arr, issentencecomplete = False):
     global isactive
-    global tobreak 
+    global tobreak
+    global last_command 
     if isactive:
         if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr:
             open(Arr)
@@ -55,15 +56,25 @@ def whatToDo(Arr, issentencecomplete = False):
         if "beenden" in Arr or "beende" in Arr:
             if confirm(Arr):
                 tobreak = True
+                notify("Sprachsteuerung beendet")
         if "deaktivieren" in Arr or "deaktiviere" in Arr:
             isactive = False
+            if not last_command == "deaktiviert":
+                notify("Sprachsteuerung deaktiviert")
+                last_command = "deaktiviert"
         if "aktivieren" in Arr or "aktiviere" in Arr:
             isactive = True
+            if not last_command == "aktiviert":
+                notify("Sprachsteuerung aktiviert")
+                last_command = "aktiviert"
 
 def confirm(Arr):
     if "bestätige" in Arr or "bestätigen" in Arr or "bestätigt" in Arr:
         return True
     return False
+
+def notify(text):
+    os.system(f'zenity --notification --text="{text}"')
 
 def getPercent(Arr):
     for word in Arr:
@@ -79,7 +90,13 @@ def computertasks (Arr):
     if "herunterfahren" in Arr:
         if confirm(Arr):
             subprocess.Popen(["shutdown", "-h","0"])
-    if "neustarten" in Arr:
+    if "neustarten" in Arr or "neu" in Arr:
+        if "neu" in Arr:
+            try:
+                if Arr[Arr.index("neu") + 1] != "starten":
+                    return
+            except IndexError:
+                return
         if confirm(Arr):
             subprocess.Popen(["reboot"])
     if "leiser" in Arr and last_command!= "leiser":
@@ -189,6 +206,7 @@ try:
         print("#" * 80)
         print("Press Ctrl+C to stop the recording")
         print("#" * 80)
+        notify("Sprachsteuerung bereit")
 
         rec = KaldiRecognizer(model, args.samplerate)
         while True:
