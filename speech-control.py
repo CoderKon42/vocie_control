@@ -7,6 +7,7 @@ import sounddevice as sd
 import json
 import subprocess
 import os
+import apps_local
 
 from vosk import Model, KaldiRecognizer
 
@@ -16,24 +17,10 @@ last_command = ''
 tobreak = False
 isactive = True
 numbers_one_to_twenty = ["null", "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf", "zwölf", "dreizehn", "vierzehn", "fünfzehn","sechzehn","siebzehn", "achtzehn","neunzehn","zwanzig"]
-apps = [
-{"openname": "blender", "isflatpak": False, "parameter": None, "elsekill": None}, 
-{"openname": "gnome-terminal", "isflatpak": False, "parameter": None, "elsekill": None},
-{"openname": "discord", "isflatpak": False, "parameter": None ,"elsekill": "Discord"},
-{"openname": "firefox", "isflatpak": False, "parameter": "startpage.com", "elsekill": None},
-{"openname": "firefox", "isflatpak": False, "parameter": "lichess.org", "elsekill": None},
-{"openname": "firefox", "isflatpak": False, "parameter": "youtube.com", "elsekill": None},
-{"openname": "signal-desktop", "isflatpak": False, "parameter": None, "elsekill": None},
-{"openname": "gimp", "isflatpak": False, "parameter": None, "elsekill": None},
-{"openname": "geogebra", "isflatpak": False, "parameter": None, "elsekill": "electron"},
-{"openname": "com.vscodium.codium", "isflatpak": True, "parameter": None, "tokill":"codium", "elsekill": None},
-{"openname": "net.ankiweb.Anki", "isflatpak": True, "parameter": None, "tokill": "anki", "elsekill": None},
-{"openname": "io.github.shiftey.Desktop", "isflatpak": True, "parameter": None, "tokill": "github-desktop", "elsekill": None},
-{"openname": "io.github.mimbrero.WhatsAppDesktop", "isflatpak": True, "parameter": None, "tokill": "whatsapp", "elsekill": None},
-{"openname": "com.ultimaker.cura", "isflatpak": True, "parameter": None , "tokill": "Ultimaker-Cura", "elsekill": None}
-]
-identifier = ["blender", 0, "terminal", 1, "kommandozeile", 1, "discord", 2, "disco", 2, "firefox", 3, "schach", 4, "youtube", 5, "signal", 6, "gimp", 7, "geogebra", 8, "code", 9, "anki", 10,"anke", 10, "anti", 10, "github", 11, "whatsapp", 12, "whats-app", 12, "cura", 13, "hurra", 13]
-# name of the app and/or nickname followed by the index of where the app is in the apps list
+apps_local.load_identifier()
+identifier = apps_local.identifier
+apps_local.load_apps()
+apps = apps_local.apps
 
 def whatToDo(Arr, issentencecomplete = False):
     global isactive
