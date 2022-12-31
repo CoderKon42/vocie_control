@@ -28,7 +28,7 @@ def whatToDo(Arr, issentencecomplete = False):
     global last_command 
     if isactive:
         if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr:
-            open(Arr)
+            open_app(Arr)
         if "schließe" in Arr or "schließen" in Arr or "schließt" in Arr:
             close(Arr)
         if "computer" in Arr:
@@ -73,7 +73,9 @@ def computertasks (Arr):
     global last_command
     if "abmelden" in Arr:
         if confirm(Arr):
-            subprocess.Popen(["pkill", "-u", "konstantinm"])
+            with open('.cache/vosk/username', 'r') as usr:
+                username = usr.read().split('\n')
+                subprocess.Popen(["pkill", "-u", username[0]])
     if "herunterfahren" in Arr:
         if confirm(Arr):
             subprocess.Popen(["shutdown", "-h","0"])
@@ -98,7 +100,7 @@ def computertasks (Arr):
             last_command = "lauter"
 
 
-def open(Arr):
+def open_app(Arr):
     global last_command
     for word in Arr:
         if word in identifier and word != last_command:
