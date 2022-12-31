@@ -1,6 +1,7 @@
 apps = []
 identifier = []
 
+
 def load_apps():
     index_read = 0
     with open('.cache/vosk/apps_save', 'r') as f:
@@ -58,8 +59,6 @@ def load_identifier():
                 identifier.append(int(values[i]))
 
 
-
-
 def insert_app(identifiers, openname, isflatpak, tokill = None, parameter = None, elsekill = None):
     # identifier as list
     load_apps()
@@ -93,6 +92,7 @@ def insert_app(identifiers, openname, isflatpak, tokill = None, parameter = None
         identifier.append(len(apps)+1)
 
     insert_app_save(identifiers, openname, isflatpak, tokill, parameter, elsekill , len(apps)-1)
+    
 
 def insert_app_save(identifiers, openname, isflatpak,tokill, parameter, elsekill, index):
     first = True
