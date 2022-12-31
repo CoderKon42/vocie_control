@@ -13,7 +13,7 @@ from vosk import Model, KaldiRecognizer
 
 q = queue.Queue()
 words = []
-last_command = ''
+last_commands = []
 tobreak = False
 isactive = True
 numbers_one_to_twenty = ["null", "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf", "zwölf", "dreizehn", "vierzehn", "fünfzehn","sechzehn","siebzehn", "achtzehn","neunzehn","zwanzig"]
@@ -25,7 +25,7 @@ apps = apps_local.apps
 def whatToDo(Arr, issentencecomplete = False):
     global isactive
     global tobreak
-    global last_command 
+    global last_commands
     if isactive:
         if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr:
             open_app(Arr)
@@ -46,14 +46,14 @@ def whatToDo(Arr, issentencecomplete = False):
                 notify("Sprachsteuerung beendet")
         if "deaktivieren" in Arr or "deaktiviere" in Arr:
             isactive = False
-            if not last_command == "deaktiviert":
+            if  not "deaktiviert" in last_commands:
                 notify("Sprachsteuerung deaktiviert")
-                last_command = "deaktiviert"
+                last_commands.append("deaktiviert")
         if "aktivieren" in Arr or "aktiviere" in Arr:
             isactive = True
-            if not last_command == "aktiviert":
+            if not "aktiviert" in last_commands:
                 notify("Sprachsteuerung aktiviert")
-                last_command = "aktiviert"
+                last_commands.append("aktiviert")
 
 def confirm(Arr):
     if "bestätige" in Arr or "bestätigen" in Arr or "bestätigt" in Arr:
@@ -70,7 +70,7 @@ def getPercent(Arr):
     return None
 
 def computertasks (Arr):
-    global last_command
+    global last_commands
     if "abmelden" in Arr:
         if confirm(Arr):
             with open('.cache/vosk/username', 'r') as usr:
@@ -88,22 +88,22 @@ def computertasks (Arr):
                 return
         if confirm(Arr):
             subprocess.Popen(["reboot"])
-    if "leiser" in Arr and last_command!= "leiser":
+    if "leiser" in Arr and not "leiser" in last_commands:
         percent = getPercent(Arr)
         if percent is not None:
             subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%-"])
-            last_command = "leiser"
-    if ("lauter" in Arr or "laut" in Arr or "lauta" in Arr) and last_command != "lauter":
+            last_commands.append("leiser")
+    if ("lauter" in Arr or "laut" in Arr or "lauta" in Arr) and not "lauter" in last_commands:
         percent = getPercent(Arr)
         if percent is not None:
             subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%+"])
-            last_command = "lauter"
+            last_commands.append("lauter")
 
 
 def open_app(Arr):
-    global last_command
+    global last_commands
     for word in Arr:
-        if word in identifier and word != last_command:
+        if word in identifier and  not word in last_commands:
             app = apps[identifier[identifier.index(word)+1]]
             if app['isflatpak']:
                 if app["parameter"] == None:
@@ -115,7 +115,7 @@ def open_app(Arr):
                     subprocess.Popen([f"/usr/bin/{app['openname']}"])
                 else:
                     subprocess.Popen([f"/usr/bin/{app['openname']}", app['parameter']])
-            last_command = word
+            last_commands.append(word)
 
 
 def close(Arr):
@@ -204,7 +204,7 @@ try:
                 vc = json.loads(rec.Result())
                 words = vc['text'].split()
                 whatToDo(words, True)
-                last_command = ""
+                last_commands = []
             else:
                 vc = json.loads(rec.PartialResult())
                 words = vc['partial'].split()
