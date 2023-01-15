@@ -33,7 +33,7 @@ def whatToDo(Arr, issentencecomplete = False):
             close(Arr)
         if "computer" in Arr:
             computertasks(Arr)
-        if ("google" in Arr or "googles" in Arr) and issentencecomplete == True:
+        if ("google" in Arr or "googles" in Arr) and issentencecomplete:
             if "google" in Arr:
                 key = "google"
             if "googles" in Arr:
