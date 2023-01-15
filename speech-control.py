@@ -27,7 +27,7 @@ def whatToDo(Arr, issentencecomplete = False):
     global tobreak
     global last_commands
     if isactive:
-        if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr:
+        if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr or "öffnen" in Arr:
             open_app(Arr)
         if "schließe" in Arr or "schließen" in Arr or "schließt" in Arr:
             close(Arr)
