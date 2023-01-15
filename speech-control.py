@@ -74,8 +74,8 @@ def computertasks (Arr):
     if "abmelden" in Arr:
         if confirm(Arr):
             with open('.cache/vosk/username', 'r') as usr:
-                username = usr.read().split('\n')
-                subprocess.Popen(["pkill", "-u", username[0]])
+                username = usr.read().split('\n')[0]
+                subprocess.Popen(["pkill", "-u", username])
     if "herunterfahren" in Arr:
         if confirm(Arr):
             subprocess.Popen(["shutdown", "-h","0"])
