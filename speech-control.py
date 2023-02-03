@@ -196,7 +196,6 @@ try:
         print("Press Ctrl+C to stop the recording")
         print("#" * 80)
         notify("Sprachsteuerung bereit")
-
         rec = KaldiRecognizer(model, args.samplerate)
         while True:
             data = q.get()
@@ -208,8 +207,8 @@ try:
             else:
                 vc = json.loads(rec.PartialResult())
                 words = vc['partial'].split()
-                whatToDo(words)  
-            print(words)      
+                whatToDo(words)
+            print(words)
 
             if tobreak:
                 break    
