@@ -54,7 +54,8 @@ def load_identifier():
         values = f.read().split('\n')
         for i in range(len(values)):
             if i % 2 == 0:
-                identifier.append(values[i])
+                if values[i] != '':
+                    identifier.append(values[i])
             else:
                 identifier.append(int(values[i]))
 

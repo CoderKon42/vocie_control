@@ -8,6 +8,7 @@ import json
 import subprocess
 import os
 import apps_local
+import openai
 
 from vosk import Model, KaldiRecognizer
 
@@ -21,24 +22,29 @@ apps_local.load_identifier()
 identifier = apps_local.identifier
 apps_local.load_apps()
 apps = apps_local.apps
+with open('.cache/vosk/api.key', 'r') as api_key:
+        API_KEY = api_key.read().split("\n")[0]
 
 def whatToDo(Arr, issentencecomplete = False):
     global isactive
     global tobreak
     global last_commands
     if isactive:
+        if "gideon" in Arr and issentencecomplete:
+            askGPT3(Arr)
+            subprocess.Popen(["/usr/bin/xed", ".cache/vosk/GTP3_answers.txt"])
         if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr or "öffnen" in Arr:
             open_app(Arr)
         if "schließe" in Arr or "schließen" in Arr or "schließt" in Arr:
             close(Arr)
         if "computer" in Arr:
             computertasks(Arr)
-        if ("google" in Arr or "googles" in Arr) and issentencecomplete:
+        if "google" in Arr or "googles" in Arr and issentencecomplete:
             if "google" in Arr:
-                key = "google"
+                keyword = "google"
             if "googles" in Arr:
-                key = "googles"
-            google(Arr, key)
+                keyword = "googles"
+            google(Arr, keyword)
     if "sprachsteuerung" in Arr:
         if "beenden" in Arr or "beende" in Arr:
             if confirm(Arr):
@@ -99,6 +105,26 @@ def computertasks (Arr):
             subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%+"])
             last_commands.append("lauter")
 
+
+
+def askGPT3(question_Arr):
+    gideon_index = question_Arr.index("gideon")
+    aftergideon = question_Arr[gideon_index + 1:]
+    question = ' '.join(aftergideon)
+
+    ergebnis = openai.Completion.create(
+        model = 'text-davinci-003',
+        prompt = question,
+        max_tokens = 2048,
+        api_key = API_KEY
+    )
+    answer = ergebnis.choices[0].text
+    
+    print(answer)
+
+    with open('.cache/vosk/GTP3_answers.txt', 'w') as file:
+        file.write(answer)
+    
 
 def open_app(Arr):
     global last_commands
