@@ -39,7 +39,7 @@ def whatToDo(Arr, issentencecomplete = False):
             close(Arr)
         if "computer" in Arr:
             computertasks(Arr)
-        if "google" in Arr or "googles" in Arr and issentencecomplete:
+        if ("google" in Arr or "googles" in Arr) and issentencecomplete:
             if "google" in Arr:
                 keyword = "google"
             if "googles" in Arr:
@@ -124,7 +124,7 @@ def askGPT3(question_Arr):
 
     with open('.cache/vosk/GTP3_answers.txt', 'w') as file:
         file.write(answer)
-    
+  
 
 def open_app(Arr):
     global last_commands
