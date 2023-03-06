@@ -20,15 +20,32 @@ isactive = True
 numbers_one_to_twenty = ["null", "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf", "zwölf", "dreizehn", "vierzehn", "fünfzehn","sechzehn","siebzehn", "achtzehn","neunzehn","zwanzig"]
 apps_local.load_identifier()
 identifier = apps_local.identifier
+setactive = False
 apps_local.load_apps()
 apps = apps_local.apps
 with open('.cache/vosk/api.key', 'r') as api_key:
         API_KEY = api_key.read().split("\n")[0]
 
+class GPT:
+    def __init__(self, api_key, role):
+        openai.api_key = api_key
+        self.dialog = [{"role" : "system", "content" : role}]
+
+    def ask(self, question):
+        self.dialog.append({"role" : "user", "content" : question})
+        ergebnis = openai.ChatCompletion.create(
+            model= 'gpt-3.5-turbo',
+            messages = self.dialog
+        )
+        answer = ergebnis.choices[0].message.content
+        self.dialog.append({"role" : "assistent", "content" : answer})
+        return answer
+
 def whatToDo(Arr, issentencecomplete = False):
     global isactive
     global tobreak
     global last_commands
+    global setactive
     if isactive:
         if "gideon" in Arr and issentencecomplete:
             askGPT3(Arr)
@@ -37,7 +54,7 @@ def whatToDo(Arr, issentencecomplete = False):
             open_app(Arr)
         if "schließe" in Arr or "schließen" in Arr or "schließt" in Arr:
             close(Arr)
-        if "computer" in Arr:
+        if "computer" in Arr and issentencecomplete:
             computertasks(Arr)
         if ("google" in Arr or "googles" in Arr) and issentencecomplete:
             if "google" in Arr:
@@ -60,6 +77,9 @@ def whatToDo(Arr, issentencecomplete = False):
             if not "aktiviert" in last_commands:
                 notify("Sprachsteuerung aktiviert")
                 last_commands.append("aktiviert")
+    if "abbrechen" in Arr : #this comand only works for task needing an completed sentence if used after initialising the task
+        isactive = False
+        setactive = True
 
 def confirm(Arr):
     if "bestätige" in Arr or "bestätigen" in Arr or "bestätigt" in Arr:
@@ -112,14 +132,8 @@ def askGPT3(question_Arr):
     aftergideon = question_Arr[gideon_index + 1:]
     question = ' '.join(aftergideon)
 
-    ergebnis = openai.Completion.create(
-        model = 'text-davinci-003',
-        prompt = question,
-        max_tokens = 2048,
-        api_key = API_KEY
-    )
-    answer = ergebnis.choices[0].text
-    
+    gpt = GPT(API_KEY, "Sei eine Sprachsteuerung wie Jarvis aus Ironman")
+    answer = gpt.ask(question)
     print(answer)
 
     with open('.cache/vosk/GTP3_answers.txt', 'w') as file:
@@ -230,6 +244,9 @@ try:
                 words = vc['text'].split()
                 whatToDo(words, True)
                 last_commands = []
+                if (setactive):
+                    isactive = True
+                    setactive = False
             else:
                 vc = json.loads(rec.PartialResult())
                 words = vc['partial'].split()
