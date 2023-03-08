@@ -38,8 +38,10 @@ class GPT:
             messages = self.dialog
         )
         answer = ergebnis.choices[0].message.content
-        self.dialog.append({"role" : "assistent", "content" : answer})
+        self.dialog.append({"role" : "assistant", "content" : answer})
         return answer
+
+gpt = GPT(API_KEY, "Sei eine Sprachsteuerung")        
 
 def whatToDo(Arr, issentencecomplete = False):
     global isactive
@@ -47,7 +49,7 @@ def whatToDo(Arr, issentencecomplete = False):
     global last_commands
     global setactive
     if isactive:
-        if "gideon" in Arr and issentencecomplete:
+        if "frage" in Arr and issentencecomplete:
             askGPT3(Arr)
             subprocess.Popen(["/usr/bin/xed", ".cache/vosk/GTP3_answers.txt"])
         if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr or "öffnen" in Arr:
@@ -128,11 +130,12 @@ def computertasks (Arr):
 
 
 def askGPT3(question_Arr):
-    gideon_index = question_Arr.index("gideon")
-    aftergideon = question_Arr[gideon_index + 1:]
-    question = ' '.join(aftergideon)
+    global gpt
+    frage_index = question_Arr.index("frage")
+    afterfrage = question_Arr[frage_index + 1:]
+    question = ' '.join(afterfrage)
 
-    gpt = GPT(API_KEY, "Sei eine Sprachsteuerung wie Jarvis aus Ironman")
+    
     answer = gpt.ask(question)
     print(answer)
 
