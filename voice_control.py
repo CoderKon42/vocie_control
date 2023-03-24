@@ -49,8 +49,8 @@ def whatToDo(Arr, issentencecomplete = False):
     global last_commands
     global setactive
     if isactive:
-        if "frage" in Arr and issentencecomplete:
-            askGPT3(Arr)
+        if "zeus" in Arr and issentencecomplete: # zeus an not often used word which isn`t subsceptible to recognition errors
+            askGPT(Arr)
             subprocess.Popen(["/usr/bin/xed", ".cache/vosk/GTP3_answers.txt"])
         if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr or "öffnen" in Arr:
             open_app(Arr)
@@ -129,7 +129,7 @@ def computertasks (Arr):
 
 
 
-def askGPT3(question_Arr):
+def askGPT(question_Arr):
     global gpt
     frage_index = question_Arr.index("frage")
     afterfrage = question_Arr[frage_index + 1:]
