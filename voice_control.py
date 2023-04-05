@@ -43,7 +43,7 @@ class GPT:
         self.dialog.append({"role" : "assistant", "content" : answer})
         return answer
 
-gpt = GPT(API_KEY, "Sei eine Sprachsteuerung")        
+gpt = GPT(API_KEY, "Sei eine Sprachsteuerung names Zeus")        
 
 def whatToDo(Arr, issentencecomplete = False):
     global isactive
@@ -133,9 +133,9 @@ def computertasks (Arr):
 
 def askGPT(question_Arr):
     global gpt
-    frage_index = question_Arr.index("frage")
-    afterfrage = question_Arr[frage_index + 1:]
-    question = ' '.join(afterfrage)
+    zeus_index = question_Arr.index("zeus")
+    afterzeus = question_Arr[zeus_index + 1:]
+    question = ' '.join(afterzeus)
 
     
     answer = gpt.ask(question)
