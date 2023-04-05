@@ -9,6 +9,8 @@ import subprocess
 import os
 import apps_local
 import openai
+from gtts import gTTS
+from pygame import mixer
 
 from vosk import Model, KaldiRecognizer
 
@@ -41,7 +43,7 @@ class GPT:
         self.dialog.append({"role" : "assistant", "content" : answer})
         return answer
 
-gpt = GPT(API_KEY, "Sei eine Sprachsteuerung")        
+gpt = GPT(API_KEY, "Sei eine Sprachsteuerung names Zeus")        
 
 def whatToDo(Arr, issentencecomplete = False):
     global isactive
@@ -49,7 +51,7 @@ def whatToDo(Arr, issentencecomplete = False):
     global last_commands
     global setactive
     if isactive:
-        if "zeus" in Arr and issentencecomplete: # zeus an not often used word which isn`t subsceptible to recognition errors
+        if "zeus" in Arr and issentencecomplete and last_commands == []: # zeus: an not often used word which isn`t subsceptible to recognition errors
             askGPT(Arr)
             subprocess.Popen(["/usr/bin/xed", ".cache/vosk/GTP3_answers.txt"])
         if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr or "öffnen" in Arr:
@@ -131,17 +133,25 @@ def computertasks (Arr):
 
 def askGPT(question_Arr):
     global gpt
-    frage_index = question_Arr.index("frage")
-    afterfrage = question_Arr[frage_index + 1:]
-    question = ' '.join(afterfrage)
+    zeus_index = question_Arr.index("zeus")
+    afterzeus = question_Arr[zeus_index + 1:]
+    question = ' '.join(afterzeus)
 
     
     answer = gpt.ask(question)
     print(answer)
 
+    readout(answer)
     with open('.cache/vosk/GTP3_answers.txt', 'w') as file:
         file.write(answer)
   
+
+def readout(textts):
+    tts = gTTS(text=textts, lang='de')
+    tts.save(".cache/vosk/GTP3_answers.mp3")
+    mixer.init()
+    mixer.music.load('.cache/vosk/GTP3_answers.mp3')
+    mixer.music.play()
 
 def open_app(Arr):
     global last_commands
