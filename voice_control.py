@@ -25,7 +25,7 @@ identifier = apps_local.identifier
 setactive = False
 apps_local.load_apps()
 apps = apps_local.apps
-with open('.cache/vosk/api.key', 'r') as api_key:
+with open('.cache/vosk/api.key', 'r', encoding='utf-8-sig') as api_key:
         API_KEY = api_key.read().split("\n")[0]
 
 class GPT:
@@ -128,6 +128,8 @@ def computertasks (Arr):
         if percent is not None:
             subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%+"])
             last_commands.append("lauter")
+    if "pause" in Arr or "pausieren" in Arr or "weiter" in Arr or "abspielen" in Arr:
+        subprocess.Popen(["playerctl", "play-pause", "smplayer"])
 
 
 
