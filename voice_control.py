@@ -106,6 +106,9 @@ def computertasks (Arr):
             with open('.cache/vosk/username', 'r') as usr:
                 username = usr.read().split('\n')[0]
                 subprocess.Popen(["pkill", "-u", username])
+    if "energiesparen" in Arr:
+        if confirm(Arr):
+            subprocess.Popen(["systemctl", "suspend"])
     if "herunterfahren" in Arr:
         if confirm(Arr):
             subprocess.Popen(["shutdown", "-h","0"])
@@ -130,6 +133,11 @@ def computertasks (Arr):
             last_commands.append("lauter")
     if "pause" in Arr or "pausieren" in Arr or "weiter" in Arr or "abspielen" in Arr:
         subprocess.Popen(["playerctl", "play-pause", "smplayer"])
+    if "überspringen" in Arr or "nächster" in Arr or "nächstes" in Arr:
+        subprocess.Popen(["playerctl", "next"])
+    if "vorheriges" in Arr or "vorheriger" in Arr or "" or "letztes" in Arr or "letzter" in Arr or "zurück" in Arr:
+        subprocess.Popen(["playerctl", "previous"]) #resets the current playing song
+        subprocess.Popen(["playerctl", "previous"]) # starts the previous song
 
 
 
