@@ -11,7 +11,6 @@ import apps_local
 import openai
 from gtts import gTTS
 from pygame import mixer
-
 from vosk import Model, KaldiRecognizer
 
 q = queue.Queue()
@@ -53,7 +52,7 @@ def whatToDo(Arr, issentencecomplete = False):
     if isactive:
         if "zeus" in Arr and issentencecomplete and last_commands == []: # zeus: an not often used word which isn`t subsceptible to recognition errors
             askGPT(Arr)
-            subprocess.Popen(["/usr/bin/xed", ".cache/vosk/GTP3_answers.txt"])
+            subprocess.Popen(["mousepad", ".cache/vosk/GTP3_answers.txt"])
         if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr or "öffnen" in Arr:
             open_app(Arr)
         if "schließe" in Arr or "schließen" in Arr or "schließt" in Arr:
@@ -132,10 +131,10 @@ def computertasks (Arr):
             subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%+"])
             last_commands.append("lauter")
     if "pause" in Arr or "pausieren" in Arr or "weiter" in Arr or "abspielen" in Arr:
-        subprocess.Popen(["playerctl", "play-pause", "smplayer"])
+        subprocess.Popen(["playerctl", "-i", "kdeconnect","play-pause", "smplayer"])
     if "überspringen" in Arr or "nächster" in Arr or "nächstes" in Arr:
         subprocess.Popen(["playerctl", "next"])
-    if "vorheriges" in Arr or "vorheriger" in Arr or "" or "letztes" in Arr or "letzter" in Arr or "zurück" in Arr:
+    if "vorheriges" in Arr or "vorheriger" in Arr or "letztes" in Arr or "letzter" in Arr or "zurück" in Arr:
         subprocess.Popen(["playerctl", "previous"]) #resets the current playing song
         subprocess.Popen(["playerctl", "previous"]) # starts the previous song
 
