@@ -8,7 +8,7 @@ import json
 import subprocess
 import os
 import apps_local
-import openai
+#import openai
 from gtts import gTTS
 from pygame import mixer
 from vosk import Model, KaldiRecognizer
@@ -24,25 +24,25 @@ identifier = apps_local.identifier
 setactive = False
 apps_local.load_apps()
 apps = apps_local.apps
-with open('.cache/vosk/api.key', 'r', encoding='utf-8-sig') as api_key:
-        API_KEY = api_key.read().split("\n")[0]
+#with open('.cache/vosk/api.key', 'r', encoding='utf-8-sig') as api_key:
+#        API_KEY = api_key.read().split("\n")[0]
 
-class GPT:
-    def __init__(self, api_key, role):
-        openai.api_key = api_key
-        self.dialog = [{"role" : "system", "content" : role}]
-
-    def ask(self, question):
-        self.dialog.append({"role" : "user", "content" : question})
-        ergebnis = openai.ChatCompletion.create(
-            model= 'gpt-3.5-turbo',
-            messages = self.dialog
-        )
-        answer = ergebnis.choices[0].message.content
-        self.dialog.append({"role" : "assistant", "content" : answer})
-        return answer
-
-gpt = GPT(API_KEY, "Sei eine Sprachsteuerung names Zeus")        
+#class GPT:
+#    def __init__(self, api_key, role):
+#        openai.api_key = api_key
+#        self.dialog = [{"role" : "system", "content" : role}]
+#
+#    def ask(self, question):
+#        self.dialog.append({"role" : "user", "content" : question})
+#        ergebnis = openai.ChatCompletion.create(
+#            model= 'gpt-3.5-turbo',
+#            messages = self.dialog
+#        )
+#        answer = ergebnis.choices[0].message.content
+#        self.dialog.append({"role" : "assistant", "content" : answer})
+#        return answer
+#
+#gpt = GPT(API_KEY, "Sei eine Sprachsteuerung names Zeus")        
 
 def whatToDo(Arr, issentencecomplete = False):
     global isactive
@@ -50,9 +50,9 @@ def whatToDo(Arr, issentencecomplete = False):
     global last_commands
     global setactive
     if isactive:
-        if "zeus" in Arr and issentencecomplete and last_commands == []: # zeus: an not often used word which isn`t subsceptible to recognition errors
-            askGPT(Arr)
-            subprocess.Popen(["mousepad", ".cache/vosk/GTP3_answers.txt"])
+        #if "zeus" in Arr and issentencecomplete and last_commands == []: # zeus: an not often used word which isn`t subsceptible to recognition errors
+        #    askGPT(Arr)
+        #    subprocess.Popen(["mousepad", ".cache/vosk/GTP3_answers.txt"])
         if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr or "öffnen" in Arr:
             open_app(Arr)
         if "schließe" in Arr or "schließen" in Arr or "schließt" in Arr:
@@ -140,19 +140,19 @@ def computertasks (Arr):
 
 
 
-def askGPT(question_Arr):
-    global gpt
-    zeus_index = question_Arr.index("zeus")
-    afterzeus = question_Arr[zeus_index + 1:]
-    question = ' '.join(afterzeus)
+#def askGPT(question_Arr):
+#    global gpt
+#    zeus_index = question_Arr.index("zeus")
+#    afterzeus = question_Arr[zeus_index + 1:]
+#    question = ' '.join(afterzeus)
 
     
-    answer = gpt.ask(question)
-    print(answer)
+#    answer = gpt.ask(question)
+#    print(answer)
 
-    readout(answer)
-    with open('.cache/vosk/GTP3_answers.txt', 'w') as file:
-        file.write(answer)
+#    readout(answer)
+#    with open('.cache/vosk/GTP3_answers.txt', 'w') as file:
+#        file.write(answer)
   
 
 def readout(textts):
