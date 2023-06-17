@@ -24,7 +24,7 @@ identifier = apps_local.identifier
 setactive = False
 apps_local.load_apps()
 apps = apps_local.apps
-#with open('.cache/vosk/api.key', 'r', encoding='utf-8-sig') as api_key:
+#with open('~/.cache/vosk/api.key', 'r', encoding='utf-8-sig') as api_key:
 #        API_KEY = api_key.read().split("\n")[0]
 
 #class GPT:
@@ -52,7 +52,7 @@ def whatToDo(Arr, issentencecomplete = False):
     if isactive:
         #if "zeus" in Arr and issentencecomplete and last_commands == []: # zeus: an not often used word which isn`t subsceptible to recognition errors
         #    askGPT(Arr)
-        #    subprocess.Popen(["mousepad", ".cache/vosk/GTP3_answers.txt"])
+        #    subprocess.Popen(["mousepad", "~/.cache/vosk/GTP3_answers.txt"])
         if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr or "öffnen" in Arr:
             open_app(Arr)
         if "schließe" in Arr or "schließen" in Arr or "schließt" in Arr:
@@ -102,7 +102,7 @@ def computertasks (Arr):
     global last_commands
     if "abmelden" in Arr:
         if confirm(Arr):
-            with open('.cache/vosk/username', 'r') as usr:
+            with open('~/.cache/vosk/username', 'r') as usr:
                 username = usr.read().split('\n')[0]
                 subprocess.Popen(["pkill", "-u", username])
     if "energiesparen" in Arr:
@@ -151,15 +151,15 @@ def computertasks (Arr):
 #    print(answer)
 
 #    readout(answer)
-#    with open('.cache/vosk/GTP3_answers.txt', 'w') as file:
+#    with open('~/.cache/vosk/GTP3_answers.txt', 'w') as file:
 #        file.write(answer)
   
 
 def readout(textts):
     tts = gTTS(text=textts, lang='de')
-    tts.save(".cache/vosk/GTP3_answers.mp3")
+    tts.save("~/.cache/vosk/GTP3_answers.mp3")
     mixer.init()
-    mixer.music.load('.cache/vosk/GTP3_answers.mp3')
+    mixer.music.load('~/.cache/vosk/GTP3_answers.mp3')
     mixer.music.play()
 
 def open_app(Arr):
