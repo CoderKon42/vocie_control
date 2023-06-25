@@ -8,6 +8,7 @@ import json
 import subprocess
 import os
 import apps_local
+import music_mode
 #import openai
 from gtts import gTTS
 from pygame import mixer
@@ -24,6 +25,8 @@ identifier = apps_local.identifier
 setactive = False
 apps_local.load_apps()
 apps = apps_local.apps
+mode = "musik"
+allowed_modes =["standard","musik"]
 #with open('~/.cache/vosk/api.key', 'r', encoding='utf-8-sig') as api_key:
 #        API_KEY = api_key.read().split("\n")[0]
 
@@ -49,22 +52,39 @@ def whatToDo(Arr, issentencecomplete = False):
     global tobreak
     global last_commands
     global setactive
+    global mode
+
     if isactive:
-        #if "zeus" in Arr and issentencecomplete and last_commands == []: # zeus: an not often used word which isn`t subsceptible to recognition errors
-        #    askGPT(Arr)
-        #    subprocess.Popen(["mousepad", "~/.cache/vosk/GTP3_answers.txt"])
-        if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr or "öffnen" in Arr:
-            open_app(Arr)
-        if "schließe" in Arr or "schließen" in Arr or "schließt" in Arr:
-            close(Arr)
-        if "computer" in Arr and issentencecomplete:
-            computertasks(Arr)
-        if ("google" in Arr or "googles" in Arr) and issentencecomplete:
-            if "google" in Arr:
-                keyword = "google"
-            if "googles" in Arr:
-                keyword = "googles"
-            google(Arr, keyword)
+        if mode == "standard": 
+            #if "zeus" in Arr and issentencecomplete and last_commands == []: # zeus: an not often used word which isn`t subsceptible to recognition errors
+            #    askGPT(Arr)
+            #    subprocess.Popen(["mousepad", ".cache/vosk/GTP3_answers.txt"])
+            if "öffne" in Arr or "öffner" in Arr or "öffnet" in Arr or "öffnen" in Arr:
+                open_app(Arr)
+            if "schließe" in Arr or "schließen" in Arr or "schließt" in Arr:
+                close(Arr)
+            if "computer" in Arr and issentencecomplete:
+                computertasks(Arr)
+            if ("google" in Arr or "googles" in Arr) and issentencecomplete:
+                if "google" in Arr:
+                    keyword = "google"
+                if "googles" in Arr:
+                    keyword = "googles"
+                    google(Arr, keyword)
+
+        if mode == "musik":
+            last_commands = music_mode.music(Arr, last_commands)
+
+        if "abbrechen" in Arr : #this comand only works for task needing an completed sentence if used after initialising the task
+            isactive = False
+            setactive = True
+            
+        if "modus" in Arr :
+            mode_before = mode
+            mode = next("modus", Arr)
+            if mode not in allowed_modes:
+                mode = mode_before
+
     if "sprachsteuerung" in Arr:
         if "beenden" in Arr or "beende" in Arr:
             if confirm(Arr):
@@ -80,9 +100,13 @@ def whatToDo(Arr, issentencecomplete = False):
             if not "aktiviert" in last_commands:
                 notify("Sprachsteuerung aktiviert")
                 last_commands.append("aktiviert")
-    if "abbrechen" in Arr : #this comand only works for task needing an completed sentence if used after initialising the task
-        isactive = False
-        setactive = True
+
+def next(word, Arr):
+    try:
+        return Arr[Arr.index(word)+1]
+    except Exception as e:
+        return None
+
 
 def confirm(Arr):
     if "bestätige" in Arr or "bestätigen" in Arr or "bestätigt" in Arr:
@@ -130,13 +154,16 @@ def computertasks (Arr):
         if percent is not None:
             subprocess.Popen(["amixer", "-D", "pulse", "sset", "Master", f"{percent}%+"])
             last_commands.append("lauter")
-    if "pause" in Arr or "pausieren" in Arr or "weiter" in Arr or "abspielen" in Arr:
+    if ("pause" in Arr or "pausieren" in Arr or "weiter" in Arr or "abspielen" in Arr) and not "pause" in last_commands:
         subprocess.Popen(["playerctl", "-i", "kdeconnect","play-pause", "smplayer"])
-    if "überspringen" in Arr or "nächster" in Arr or "nächstes" in Arr:
+        last_commands.append("pause")
+    if ("überspringen" in Arr or "nächster" in Arr or "nächstes" in Arr)and not "next" in last_commands:
         subprocess.Popen(["playerctl", "next"])
-    if "vorheriges" in Arr or "vorheriger" in Arr or "letztes" in Arr or "letzter" in Arr or "zurück" in Arr:
+        last_commands.append("next")
+    if ("vorheriges" in Arr or "vorheriger" in Arr or "letztes" in Arr or "letzter" in Arr or "zurück" in Arr) and not "previous" in last_commands:
         subprocess.Popen(["playerctl", "previous"]) #resets the current playing song
         subprocess.Popen(["playerctl", "previous"]) # starts the previous song
+        last_commands.append("previous")
 
 
 
