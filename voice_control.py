@@ -25,7 +25,7 @@ identifier = apps_local.identifier
 setactive = False
 apps_local.load_apps()
 apps = apps_local.apps
-mode = "musik"
+mode = "standart"
 allowed_modes =["standard","musik"]
 #with open('~/.cache/vosk/api.key', 'r', encoding='utf-8-sig') as api_key:
 #        API_KEY = api_key.read().split("\n")[0]
