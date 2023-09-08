@@ -27,6 +27,14 @@ apps_local.load_apps()
 apps = apps_local.apps
 mode = "standard"
 allowed_modes =["standard","musik"]
+username =""
+with open('.cache/vosk/username', 'r') as usr:
+    username = usr.read().split('\n')[0]
+py_files = []
+for filename in os.listdir(".cache/vosk/starten"):
+    if filename.endswith(".py"):
+        py_files.append(filename[:-3])
+
 #with open('~/.cache/vosk/api.key', 'r', encoding='utf-8-sig') as api_key:
 #        API_KEY = api_key.read().split("\n")[0]
 
@@ -53,7 +61,6 @@ def whatToDo(Arr, issentencecomplete = False):
     global last_commands
     global setactive
     global mode
-
     if isactive:
         if mode == "standard": 
             #if "zeus" in Arr and issentencecomplete and last_commands == []: # zeus: an not often used word which isn`t subsceptible to recognition errors
@@ -71,6 +78,11 @@ def whatToDo(Arr, issentencecomplete = False):
                 if "googles" in Arr:
                     keyword = "googles"
                     google(Arr, keyword)
+            if "starten" in Arr or "starte" in Arr:
+                for element in Arr:
+                    if element in py_files and element not in last_commands:
+                        subprocess.Popen(["python", f".cache/vosk/starten/{element}.py"])
+                        last_commands.append(element)
 
         if mode == "musik":
             last_commands = music_mode.music(Arr, last_commands)
@@ -126,9 +138,7 @@ def computertasks (Arr):
     global last_commands
     if "abmelden" in Arr:
         if confirm(Arr):
-            with open('~/.cache/vosk/username', 'r') as usr:
-                username = usr.read().split('\n')[0]
-                subprocess.Popen(["pkill", "-u", username])
+            subprocess.Popen(["pkill", "-u", username])
     if "energiesparen" in Arr:
         if confirm(Arr):
             subprocess.Popen(["systemctl", "suspend"])
